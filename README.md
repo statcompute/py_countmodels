@@ -7,7 +7,7 @@ Modeling Frequency
   |
   |-- Equi-Dispersion (Baseline)
   |     |
-  |     `-- Standard Poisson
+  |     `-- Standard Poisson (done)
   |
   |-- Over-Dispersion
   |     |
