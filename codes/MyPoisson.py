@@ -17,8 +17,9 @@ class MyPoisson(GenericLikelihoodModel):
     return(ll)
 
   def fit(self, start_params = None, maxiter = 10000, maxfun = 5000, **kwds):
-    start_params = numpy.zeros(self.exog.shape[1])
-    start_params[-1] = numpy.log(self.endog.mean())
+    if start_params == None:
+      start_params = numpy.zeros(self.exog.shape[1])
+      start_params[-1] = numpy.log(self.endog.mean())
     return(super(MyPoisson, self).fit(start_params = start_params,
                                       maxiter = maxiter, maxfun = maxfun, **kwds))
 
