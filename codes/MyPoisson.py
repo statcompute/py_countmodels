@@ -22,7 +22,6 @@ class MyPoisson(GenericLikelihoodModel):
     return(super(MyPoisson, self).fit(start_params = start_params,
                                       maxiter = maxiter, maxfun = maxfun, **kwds))
 
-
 import statsmodels.api as sm
 
 df = sm.datasets.get_rdataset("medpar", "COUNT", cache = True).data
