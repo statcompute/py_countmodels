@@ -7,9 +7,9 @@ def _negll_poisson(y, X, beta):
   ll = numpy.log(pr)
   return(-ll)
   
-class MyPoisson(GenericLikelihoodModel):
+class StdPoisson(GenericLikelihoodModel):
   def __init__(self, endog, exog, **kwds):
-    super(MyPoisson, self).__init__(endog, exog, **kwds)
+    super(StdPoisson, self).__init__(endog, exog, **kwds)
 
   def nloglikeobs(self, params):
     beta = params
@@ -20,19 +20,21 @@ class MyPoisson(GenericLikelihoodModel):
     if start_params == None:
       start_params = numpy.zeros(self.exog.shape[1])
       start_params[-1] = numpy.log(self.endog.mean())
-    return(super(MyPoisson, self).fit(start_params = start_params,
+    return(super(StdPoisson, self).fit(start_params = start_params,
                                       maxiter = maxiter, maxfun = maxfun, **kwds))
 
-import statsmodels.api as sm
+import pandas
 
-df = sm.datasets.get_rdataset("medpar", "COUNT", cache = True).data
+df = pandas.read_csv("data/credit_count.csv")
 
-Y = df.los
+y = df.MAJORDRG
 
-X = df.loc[:, ["type2", "type3", "hmo", "white"]]
+xnames = ['AGE', 'ACADMOS', 'MINORDRG', 'OWNRENT']
+
+X = df.loc[:, xnames]
 
 X["constant"] = 1
 
-mod = MyPoisson(Y, X)
-res = mod.fit()
-res.summary()
+mdl = StdPoisson(y, X)
+
+mdl.fit().summary()
