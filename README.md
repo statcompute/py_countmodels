@@ -11,7 +11,7 @@ Modeling Frequency
   |
   |-- Over-Dispersion
   |     |
-  |     |-- Negative Binomial
+  |     |-- Negative Binomial (done)
   |     |
   |     |-- Zero-Inflated Poisson 
   |     |
