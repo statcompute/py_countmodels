@@ -1,4 +1,4 @@
-### py_countmodels
+### py_countreg
 
 This repository is contributed to count data models.
 
@@ -27,7 +27,5 @@ Modeling Frequency
         |
         |-- Double Poisson
         |
-        |-- Conway-Maxwell Poisson
-        |
-        `-- Hyper-Poisson
+        `-- Conway-Maxwell Poisson
 ```
