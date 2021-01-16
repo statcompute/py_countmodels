@@ -23,9 +23,9 @@ Modeling Frequency
         |
         |-- Hurdle Poisson
         |
-        |-- Generalized Poisson 
+        |-- Generalized Poisson (done)
         |
         |-- Double Poisson
         |
-        `-- Conway-Maxwell Poisson
+        `-- Conway-Maxwell Poisson (done)
 ```
