@@ -13,7 +13,7 @@ Modeling Frequency
   |     |
   |     |-- Negative Binomial (done)
   |     |
-  |     |-- Zero-Inflated Poisson 
+  |     |-- Zero-Inflated Poisson (done)
   |     |
   |     `-- Finite Mixture Poisson 
   |
@@ -21,7 +21,7 @@ Modeling Frequency
         |
         |-- Quasi-Poisson
         |
-        |-- Hurdle Poisson
+        |-- Hurdle Poisson (done)
         |
         |-- Generalized Poisson (done)
         |
