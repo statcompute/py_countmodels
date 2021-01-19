@@ -1,31 +1,39 @@
 ### py_countreg
 
-This repository is contributed to count data models.
+#### Introduction
+
+The package py\_countreg is a collection of functions to estimate various regression models for count outcomes.
+
+It is an ongoing project. More functionalities will come later.
+
+#### Core Functions
 
 ```
-Modeling Frequency
+Count Outcome Regressions
   |
   |-- Equi-Dispersion (Baseline)
   |     |
-  |     `-- Standard Poisson (done)
+  |     `-- stdpoisson() : Standard Poisson
   |
   |-- Over-Dispersion
   |     |
-  |     |-- Negative Binomial (done)
+  |     |-- negbinom2()  : Negative Binomial (NB-2)
   |     |
-  |     |-- Zero-Inflated Poisson (done)
+  |     |-- hdlnegbin2() : Hurdle Negative Binomial (NB-2)
   |     |
-  |     `-- Finite Mixture Poisson 
+  |     |-- zifnegbin2() : Zero-Inflated Negative Binomial (NB-2)
+  |     |
+  |     `-- zifpoisson() : Zero-Inflated Poisson
   |
-  `-- Over- and Under-Dispersion
+  `-- Over- and Under-Dispersions
         |
-        |-- Quasi-Poisson
+        |-- hdlpoisson() : Hurdle Poisson
         |
-        |-- Hurdle Poisson (done)
+        |-- genpoisson() : Generalized Poisson
         |
-        |-- Generalized Poisson (done)
-        |
-        |-- Double Poisson
-        |
-        `-- Conway-Maxwell Poisson (done)
+        `-- compoisson() : Conway-Maxwell Poisson
 ```
+
+#### Reference
+
+WenSui Liu and Jimmy Cela (2008), Count Data Models in SAS, Proceedings SAS Global Forum 2008, paper 371-2008.
