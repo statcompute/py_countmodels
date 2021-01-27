@@ -17,22 +17,33 @@ Count Outcome Regressions
   |
   |-- Over-Dispersion
   |     |
-  |     |-- negbinom2()  : Negative Binomial (NB-2)
+  |     `-- negbinom2()  : Negative Binomial (NB-2)
+  |
+  |-- Over- and Under-Dispersions
+  |     |
+  |     |-- genpoisson() : Generalized Poisson
+  |     |
+  |     `-- compoisson() : Conway-Maxwell Poisson
+  |
+  |-- Zero-Inflation
+  |     |
+  |     |-- hdlpoisson() : Hurdle Poisson
   |     |
   |     |-- hdlnegbin2() : Hurdle Negative Binomial (NB-2)
   |     |
-  |     |-- zifnegbin2() : Zero-Inflated Negative Binomial (NB-2)
+  |     |-- zifpoisson() : Zero-Inflated Poisson
   |     |
-  |     `-- zifpoisson() : Zero-Inflated Poisson
+  |     `-- zifnegbin2() : Zero-Inflated Negative Binomial (NB-2)
   |
-  `-- Over- and Under-Dispersions
+  `-- Zero-Truncation
         |
-        |-- hdlpoisson() : Hurdle Poisson
+        |-- ztrpoisson() : Zero-Truncated Poisson
         |
-        |-- genpoisson() : Generalized Poisson
+        |-- ztgpoisson() : Zero-Truncated Generalized Poisson
         |
-        `-- compoisson() : Conway-Maxwell Poisson
-```
+        |-- ztcpoisson() : Zero-Truncated Conway-Maxwell Poisson
+        |
+        `-- ztrnegbin2() : Zero-Truncated Negative Binomial (NB-2)```
 
 #### Reference
 
