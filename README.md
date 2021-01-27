@@ -43,7 +43,8 @@ Count Outcome Regressions
         |
         |-- ztcpoisson() : Zero-Truncated Conway-Maxwell Poisson
         |
-        `-- ztrnegbin2() : Zero-Truncated Negative Binomial (NB-2)```
+        `-- ztrnegbin2() : Zero-Truncated Negative Binomial (NB-2)
+```
 
 #### Reference
 
