@@ -1,6 +1,6 @@
 # py_countreg/py_countreg.py
 # exec(open('py_countreg/py_countreg.py').read())
-# 0.0.2
+# 0.0.4
 
 import numpy, scipy
 from statsmodels.base.model import GenericLikelihoodModel as gll
@@ -170,11 +170,11 @@ def genpoisson(Y, X):
       return(super(genpoisson, self).fit(start_params = start_params, method = method,
                                          maxiter = maxiter, maxfun = maxfun, **kwds))
 
-  p0 = stdpoisson(Y, X).fit(disp = 0).params
-  s0 = numpy.log(max(1e-4, 1 - numpy.power(numpy.mean(Y) / numpy.var(Y), 0.5)))
   _Y = Y.copy()
   _X = X.copy()
   _X.insert(loc = 0, column = "_CONST", value = 1)
+  p0 = stdpoisson(Y, X).fit(disp = 0).params
+  s0 = numpy.log(max(1e-4, 1 - numpy.float_power(numpy.mean(Y) / numpy.var(Y), 0.5)))
   return(genpoisson(_Y, _X))
 
 
@@ -210,7 +210,7 @@ def hdlpoisson(Y, X1, X2):
   """
   The function estimates a hurdle poisson regression, which is the composite 
   between point mess at zero and a zero-trucated poisson distribution.
-  In the model outcome, estimated coefficients starting with "P0:" are used 
+  In the model output, estimated coefficients starting with "P0:" are used 
   to predict the probability of zero outcomes and estimated coefficients 
   starting with "MU:" are used to predict frequency outcomes for a zero-trucated
   poisson.
@@ -235,7 +235,6 @@ def hdlpoisson(Y, X1, X2):
 
     def fit(self, start_params = None, maxiter = 10000, maxfun = 5000, method = "ncg", **kwds):
       if start_params == None:
-        #start_params = numpy.concatenate([p10, numpy.zeros(_X2.shape[1])])
         start_params = numpy.concatenate([p10, p20])
       return(super(hdlpoisson, self).fit(start_params = start_params, method = method,
                                          maxiter = maxiter, maxfun = maxfun, **kwds))
@@ -245,11 +244,11 @@ def hdlpoisson(Y, X1, X2):
   _X2 = X2.copy()
   _X1.insert(loc = 0, column = "_CONST", value = 1)
   _X1.columns = ["P0:" + _ for _ in _X1.columns]
-  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
   _X2.insert(loc = 0, column = "_CONST", value = 1)
   _X2.columns = ["MU:" + _ for _ in _X2.columns]
-  p20 = ztrpoisson(Y[Y > 0], X[Y > 0]).fit(disp = 0).params
   _X = _X1.join(_X2)
+  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
+  p20 = ztrpoisson(Y[Y > 0], X2[Y > 0]).fit(disp = 0).params
   return(hdlpoisson(_Y, _X))
 
 
@@ -318,11 +317,11 @@ def zifpoisson(Y, X1, X2):
   _X2 = X2.copy()
   _X1.insert(loc = 0, column = "_CONST", value = 1)
   _X1.columns = ["P0:" + _ for _ in _X1.columns]
-  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
   _X2.insert(loc = 0, column = "_CONST", value = 1)
   _X2.columns = ["MU:" + _ for _ in _X2.columns]
-  p20 = ztrpoisson(Y[Y > 0], X[Y > 0]).fit(disp = 0).params
   _X = _X1.join(_X2)
+  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
+  p20 = ztrpoisson(Y[Y > 0], X2[Y > 0]).fit(disp = 0).params
   return(zifpoisson(_Y, _X))
 
 
@@ -383,11 +382,11 @@ def compoisson(Y, X):
       return(super(compoisson, self).fit(start_params = start_params, method = method,
                                          maxiter = maxiter, maxfun = maxfun, **kwds))
 
-  p0 = stdpoisson(Y, X).fit(disp = 0).params
-  s0 = numpy.log(numpy.mean(Y) / numpy.var(Y))
   _Y = Y.copy()
   _X = X.copy()
   _X.insert(loc = 0, column = "_CONST", value = 1)
+  p0 = stdpoisson(Y, X).fit(disp = 0).params
+  s0 = numpy.log(numpy.mean(Y) / numpy.var(Y))
   return(compoisson(_Y, _X))
 
 
@@ -463,11 +462,11 @@ def hdlnegbin2(Y, X1, X2):
   _X2 = X2.copy()
   _X1.insert(loc = 0, column = "_CONST", value = 1)
   _X1.columns = ["P0:" + _ for _ in _X1.columns]
-  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
   _X2.insert(loc = 0, column = "_CONST", value = 1)
   _X2.columns = ["MU:" + _ for _ in _X2.columns]
-  p20 = ztrnegbin2(Y[Y > 0], X[Y > 0]).fit(disp = 0).params
   _X = _X1.join(_X2)
+  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
+  p20 = ztrnegbin2(Y[Y > 0], X2[Y > 0]).fit(disp = 0).params
   return(hdlnegbin2(_Y, _X))
 
 
@@ -541,11 +540,11 @@ def zifnegbin2(Y, X1, X2):
   _X2 = X2.copy()
   _X1.insert(loc = 0, column = "_CONST", value = 1)
   _X1.columns = ["P0:" + _ for _ in _X1.columns]
-  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
   _X2.insert(loc = 0, column = "_CONST", value = 1)
   _X2.columns = ["MU:" + _ for _ in _X2.columns]
-  p20 = ztrnegbin2(Y[Y > 0], X[Y > 0]).fit(disp = 0).params
   _X = _X1.join(_X2)
+  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
+  p20 = ztrnegbin2(Y[Y > 0], X2[Y > 0]).fit(disp = 0).params
   return(zifnegbin2(_Y, _X))
 
 
@@ -710,11 +709,11 @@ def ztgpoisson(Y, X):
       return(super(ztgpoisson, self).fit(start_params = start_params, method = method,
                                          maxiter = maxiter, maxfun = maxfun, **kwds))
 
-  p0 = ztrpoisson(Y, X).fit(disp = 0).params
-  s0 = numpy.log(max(1e-4, 1 - numpy.power(numpy.mean(Y) / numpy.var(Y), 0.5)))
   _Y = Y.copy()
   _X = X.copy()
   _X.insert(loc = 0, column = "_CONST", value = 1)
+  p0 = ztrpoisson(Y, X).fit(disp = 0).params
+  s0 = numpy.log(max(1e-4, 1 - numpy.float_power(numpy.mean(Y) / numpy.var(Y), 0.5)))
   return(ztgpoisson(_Y, _X))
 
 
@@ -773,10 +772,170 @@ def ztcpoisson(Y, X):
       return(super(ztcpoisson, self).fit(start_params = start_params, method = method,
                                          maxiter = maxiter, maxfun = maxfun, **kwds))
 
-  p0 = ztrpoisson(Y, X).fit(disp = 0).params
-  s0 = numpy.log(numpy.mean(Y) / numpy.var(Y))
   _Y = Y.copy()
   _X = X.copy()
   _X.insert(loc = 0, column = "_CONST", value = 1)
+  p0 = ztrpoisson(Y, X).fit(disp = 0).params
+  s0 = numpy.log(numpy.mean(Y) / numpy.var(Y))
   return(ztcpoisson(_Y, _X))
+
+
+#################### 13. Hurdle Generalized Poisson Regression ####################
+
+
+def _ll_hdgpoisson(y, x1, x2, beta1, beta2, s):
+  """
+  The function calculates the log likelihood function of the hurdle generalized 
+  poisson regression.
+  Parameters:
+    y     : the frequency outcome
+    x1    : variables for the probability model in the hurdle generalized poisson regression
+    x2    : variables for the count model in the hurdle generalized poisson regression
+    beta1 : coefficients for the probability model in the hurdle generalized poisson regression
+    beta2 : coefficients for the count model in the hurdle generalized poisson regression
+    s     : the scale parameter for the generalized poisson distribution
+  """
+
+  xb1 = numpy.dot(x1, beta1)
+  xb2 = numpy.dot(x2, beta2)
+  p0 = numpy.exp(xb1) / (1 + numpy.exp(xb1))
+  mu = numpy.exp(xb2)
+  xi = numpy.exp(s)
+  _a = mu * (1 - xi)
+  i0 = numpy.where(y == 0, 1, 0)
+  pr = p0 * i0 + \
+       (1 - p0) * _a / scipy.special.factorial(y) * numpy.exp(-_a - xi * y) * \
+       numpy.float_power(_a + xi * y, y - 1) / (1 - numpy.exp(-_a)) * (1 - i0)
+  ll = numpy.log(pr)
+  return(ll)
+
+################################################################################
+
+def hdgpoisson(Y, X1, X2):
+  """
+  The function estimates a hurdle generalized poisson regression, which is the
+  composite between point mess at zero and a zero-trucated generalized poisson
+  distribution.
+  In the model outcome, estimated coefficients starting with "P0:" are used
+  to predict the probability of zero outcomes and estimated coefficients
+  starting with "MU:" are used to predict frequency outcomes for a zero-trucated
+  generalized poisson.
+  Parameters:
+    Y  : a pandas series for the frequency outcome with integer values, including zeros.
+    X1 : a pandas dataframe with the probability model variables that are all numeric values.
+    X2 : a pandas dataframe with the count model variables that are all numeric values.
+  Example:
+    hdgpoisson(Y, X1, X2).fit().summary()
+  """
+
+  class hdgpoisson(gll):
+    def __init__(self, endog, exog, **kwds):
+      super(hdgpoisson, self).__init__(endog, exog, **kwds)
+
+    def nloglikeobs(self, params):
+      _s = params[-1]
+      d1 = _X1.shape[1]
+      beta1 = params[:d1]
+      beta2 = params[d1:-1]
+      ll = _ll_hdgpoisson(self.endog, self.exog[:, :d1], self.exog[:, d1:], beta1, beta2, _s)
+      return(-ll)
+
+    def fit(self, start_params = None, maxiter = 10000, maxfun = 5000, method = "ncg", **kwds):
+      self.exog_names.append('_S')
+      if start_params == None:
+        start_params = numpy.concatenate([p10, p20])
+      return(super(hdgpoisson, self).fit(start_params = start_params, method = method,
+                                         maxiter = maxiter, maxfun = maxfun, **kwds))
+
+  _Y = Y.copy()
+  _X1 = X1.copy()
+  _X2 = X2.copy()
+  _X1.insert(loc = 0, column = "_CONST", value = 1)
+  _X1.columns = ["P0:" + _ for _ in _X1.columns]
+  _X2.insert(loc = 0, column = "_CONST", value = 1)
+  _X2.columns = ["MU:" + _ for _ in _X2.columns]
+  _X = _X1.join(_X2)
+  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
+  p20 = ztgpoisson(Y[Y > 0], X2[Y > 0]).fit(disp = 0).params
+  return(hdgpoisson(_Y, _X))
+
+
+#################### 14. Zero-Inflated Generalized Poisson Regression ####################
+
+
+def _ll_zigpoisson(y, x1, x2, beta1, beta2, s):
+  """
+  The function calculates the log likelihood function of the zero-inflated generalized 
+  poisson regression.
+  Parameters:
+    y     : the frequency outcome
+    x1    : variables for the probability model in the zero-inflated generalized poisson regression
+    x2    : variables for the count model in the zero-inflated generalized poisson regression
+    beta1 : coefficients for the probability model in the zero-inflated generalized poisson regression
+    beta2 : coefficients for the count model in the zero-inflated generalized poisson regression
+    s     : the scale parameter for the generalized poisson distribution
+  """
+
+  xb1 = numpy.dot(x1, beta1)
+  xb2 = numpy.dot(x2, beta2)
+  p0 = numpy.exp(xb1) / (1 + numpy.exp(xb1))
+  mu = numpy.exp(xb2)
+  xi = numpy.exp(s)
+  _a = mu * (1 - xi)
+  i0 = numpy.where(y == 0, 1, 0)
+  pr = (p0 + (1 - p0) * numpy.exp(-_a)) * i0 + \
+       (1 - p0) * _a / scipy.special.factorial(y) * numpy.exp(-_a - xi * y) * \
+       numpy.float_power(_a + xi * y, y - 1) * (1 - i0)
+  ll = numpy.log(pr)
+  return(ll)
+
+################################################################################
+
+def zigpoisson(Y, X1, X2):
+  """
+  The function estimates a zero-inflated generalized poisson regression, which is 
+  the composite between point mess at zero and a zero-trucated generalized poisson
+  distribution.
+  In the model outcome, estimated coefficients starting with "P0:" are used
+  to predict the probability of zero outcomes and estimated coefficients
+  starting with "MU:" are used to predict frequency outcomes for a zero-trucated
+  generalized poisson.
+  Parameters:
+    Y  : a pandas series for the frequency outcome with integer values, including zeros.
+    X1 : a pandas dataframe with the probability model variables that are all numeric values.
+    X2 : a pandas dataframe with the count model variables that are all numeric values.
+  Example:
+    zigpoisson(Y, X1, X2).fit().summary()
+  """
+
+  class zigpoisson(gll):
+    def __init__(self, endog, exog, **kwds):
+      super(zigpoisson, self).__init__(endog, exog, **kwds)
+
+    def nloglikeobs(self, params):
+      _s = params[-1]
+      d1 = _X1.shape[1]
+      beta1 = params[:d1]
+      beta2 = params[d1:-1]
+      ll = _ll_zigpoisson(self.endog, self.exog[:, :d1], self.exog[:, d1:], beta1, beta2, _s)
+      return(-ll)
+
+    def fit(self, start_params = None, maxiter = 10000, maxfun = 5000, method = "ncg", **kwds):
+      self.exog_names.append('_S')
+      if start_params == None:
+        start_params = numpy.concatenate([p10, p20])
+      return(super(zigpoisson, self).fit(start_params = start_params, method = method,
+                                         maxiter = maxiter, maxfun = maxfun, **kwds))
+
+  _Y = Y.copy()
+  _X1 = X1.copy()
+  _X2 = X2.copy()
+  _X1.insert(loc = 0, column = "_CONST", value = 1)
+  _X1.columns = ["P0:" + _ for _ in _X1.columns]
+  _X2.insert(loc = 0, column = "_CONST", value = 1)
+  _X2.columns = ["MU:" + _ for _ in _X2.columns]
+  _X = _X1.join(_X2)
+  p10 = logit(numpy.where(_Y == 0, 1, 0), _X1).fit(disp = 0).params
+  p20 = ztgpoisson(Y[Y > 0], X2[Y > 0]).fit(disp = 0).params
+  return(zigpoisson(_Y, _X))
 
